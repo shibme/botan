@@ -5,9 +5,9 @@
 
     <groupId>me.shib.java.lib</groupId>
     <artifactId>botan</artifactId>
-    <version>0.1</version>
-    <name>Botan Java API</name>
-    <description>Java library for Botan analytics API</description>
+    <version>1.0</version>
+    <name>Botan - Java SDK</name>
+    <description>Java SDK for Botan analytics</description>
     <url>https://github.com/shibme/botan</url>
 
     <issueManagement>
