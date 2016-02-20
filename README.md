@@ -2,6 +2,7 @@
 [![Build Status](https://travis-ci.org/shibme/botan.svg)](https://travis-ci.org/shibme/botan)
 [![Dependency Status](https://www.versioneye.com/user/projects/56c60bb918b271002c69b073/badge.svg?style=flat)](https://www.versioneye.com/user/projects/56c60bb918b271002c69b073)
 [![Download](https://api.bintray.com/packages/shibme/maven/botan/images/download.svg)](https://bintray.com/shibme/maven/botan/_latestVersion)
+[![Percentage of issues still open](http://isitmaintained.com/badge/open/shibme/botan.svg)](http://isitmaintained.com/project/shibme/botan "Percentage of issues still open")
 
 Java SDK for [Botan analytics](http://botan.io)
 

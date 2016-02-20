@@ -1,6 +1,6 @@
 package me.shib.java.lib.botan;
 
-public class BotanTrackResponse {
+public final class BotanTrackResponse {
 
     private String status;
     private String info;

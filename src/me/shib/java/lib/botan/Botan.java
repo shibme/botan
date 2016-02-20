@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Botan {
+public final class Botan {
 
     private static final Logger logger = Logger.getLogger(Botan.class.getName());
     private static final String botanEndpoint = "https://api.botan.io";
