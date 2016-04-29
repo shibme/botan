@@ -1,12 +1,11 @@
 package me.shib.java.lib.botan;
 
 import me.shib.java.lib.common.utils.JsonLib;
-import me.shib.java.lib.rest.client.Parameter;
-import me.shib.java.lib.rest.client.ServiceAdapter;
-import me.shib.java.lib.rest.client.ServiceResponse;
+import me.shib.java.lib.restiny.RESTinyClient;
+import me.shib.java.lib.restiny.Response;
+import me.shib.java.lib.restiny.requests.POST;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,7 +15,7 @@ public final class Botan {
     private static final String botanEndpoint = "https://api.botan.io";
 
     private String botanToken;
-    private ServiceAdapter botanServiceAdapter;
+    private RESTinyClient resTinyClient;
     private JsonLib jsonLib;
 
     /**
@@ -26,7 +25,7 @@ public final class Botan {
      */
     public Botan(String botanToken) {
         this.botanToken = botanToken;
-        this.botanServiceAdapter = new ServiceAdapter(botanEndpoint);
+        this.resTinyClient = new RESTinyClient(botanEndpoint);
         this.jsonLib = new JsonLib();
     }
 
@@ -41,18 +40,19 @@ public final class Botan {
      */
     public BotanTrackResponse track(long user_id, String name, Object data) throws IOException {
         logger.entering(this.getClass().getName(), "track", new Object[]{user_id, data, name});
-        ArrayList<Parameter> parameters = new ArrayList<>();
-        parameters.add(new Parameter("token", botanToken));
-        parameters.add(new Parameter("uid", user_id + ""));
-        parameters.add(new Parameter("name", name));
-        ServiceResponse serviceResponse;
+        POST postRequest = new POST("track");
+        postRequest.addParameter("token", botanToken);
+        postRequest.addParameter("uid", user_id + "");
+        postRequest.addParameter("name", name);
+        postRequest.setPostObject(data);
+        Response response;
         try {
-            serviceResponse = botanServiceAdapter.post("track", data, parameters);
+            response = resTinyClient.call(postRequest);
         } catch (IOException e) {
             logger.throwing(this.getClass().getName(), "track", e);
             throw e;
         }
-        String responseJson = serviceResponse.getResponse();
+        String responseJson = response.getResponse();
         logger.log(Level.FINEST, "Service Response" + responseJson);
         BotanTrackResponse botanTrackResponse = null;
         if (responseJson != null) {
@@ -70,6 +70,24 @@ public final class Botan {
     }
 
     /**
+     * Tracks the user's data and categorizes it based on the given name as a context.
+     *
+     * @param user_id The user for whom the data is tracked for.
+     * @param name    The name of the data which gives a context for analytics. For example, tracking a command could have the name as command.
+     * @param data    The object or map representing the data. Could be a Message, Update or whatever.
+     * @throws IOException thrown when there are service call failures.
+     */
+    public void trackNoSync(long user_id, String name, Object data) throws IOException {
+        logger.entering(this.getClass().getName(), "trackNoResponse", new Object[]{user_id, data, name});
+        POST postRequest = new POST("track");
+        postRequest.addParameter("token", botanToken);
+        postRequest.addParameter("uid", user_id + "");
+        postRequest.addParameter("name", name);
+        postRequest.setPostObject(data);
+        resTinyClient.asyncCall(postRequest);
+    }
+
+    /**
      * Shortens a given URL and also tracks information about the user's location, device, user-agent, etc.
      *
      * @param user_id The user_id of the target user for whom the shortened link is intended for.
@@ -79,18 +97,18 @@ public final class Botan {
      */
     public String shortenURL(long user_id, String url) throws IOException {
         logger.entering(this.getClass().getName(), "shortenURL", new Object[]{user_id, url});
-        ArrayList<Parameter> parameters = new ArrayList<>();
-        parameters.add(new Parameter("token", botanToken));
-        parameters.add(new Parameter("user_ids", user_id + ""));
-        parameters.add(new Parameter("url", url));
-        ServiceResponse serviceResponse;
+        POST postRequest = new POST("s/");
+        postRequest.addParameter("token", botanToken);
+        postRequest.addParameter("user_ids", user_id + "");
+        postRequest.addParameter("url", url);
+        Response response;
         try {
-            serviceResponse = botanServiceAdapter.post("s/", parameters);
+            response = resTinyClient.call(postRequest);
         } catch (IOException e) {
             logger.throwing(this.getClass().getName(), "shortenURL", e);
             throw e;
         }
-        String responseText = serviceResponse.getResponse();
+        String responseText = response.getResponse();
         logger.log(Level.FINEST, "Service Response" + responseText);
         if ((responseText != null) && (responseText.toLowerCase().startsWith("http"))) {
             return responseText;
