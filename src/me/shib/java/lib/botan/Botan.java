@@ -1,9 +1,9 @@
 package me.shib.java.lib.botan;
 
-import me.shib.java.lib.common.utils.JsonLib;
 import me.shib.java.lib.restiny.RESTinyClient;
 import me.shib.java.lib.restiny.Response;
 import me.shib.java.lib.restiny.requests.POST;
+import me.shib.java.lib.restiny.util.JsonUtil;
 
 import java.io.IOException;
 import java.util.logging.Level;
@@ -16,7 +16,7 @@ public final class Botan {
 
     private String botanToken;
     private RESTinyClient resTinyClient;
-    private JsonLib jsonLib;
+    private JsonUtil jsonUtil;
 
     /**
      * Create an instance of this to track your bot and get awesome analytics.
@@ -26,7 +26,7 @@ public final class Botan {
     public Botan(String botanToken) {
         this.botanToken = botanToken;
         this.resTinyClient = new RESTinyClient(botanEndpoint);
-        this.jsonLib = new JsonLib();
+        this.jsonUtil = new JsonUtil();
     }
 
     /**
@@ -57,7 +57,7 @@ public final class Botan {
         BotanTrackResponse botanTrackResponse = null;
         if (responseJson != null) {
             try {
-                botanTrackResponse = jsonLib.fromJson(responseJson, BotanTrackResponse.class);
+                botanTrackResponse = jsonUtil.fromJson(responseJson, BotanTrackResponse.class);
                 if (botanTrackResponse.isAccepted()) {
                     logger.log(Level.FINEST, "Tracking Accepted");
                 }
